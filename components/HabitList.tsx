@@ -1,11 +1,12 @@
 'use client'
 
 import { useEffect, useState } from "react";
+import Habit from "./Habit";
 
-interface Habit {
+export interface Habit {
     title: string,
-    startDay: Date,
-    dates: [{ Date: boolean }]
+    startDay: string,
+    dates: [[string, boolean]]
 }
 
 export default function HabitList() {
@@ -22,7 +23,11 @@ export default function HabitList() {
 
     return (
         <div>
-            {habits ? habits[0].title : "Loading"}
+            <div>
+                {habits?.length && habits.map((habit, i) => {
+                    return <Habit habit={habit} key={i} />
+                })}
+            </div>
         </div>
     );
 }
