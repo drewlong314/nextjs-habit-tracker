@@ -1,3 +1,5 @@
+import HabitBox from "./HabitBox"
+
 interface Habit {
     title: string,
     startDay: string,
@@ -16,7 +18,7 @@ export default function Habit({ habit }: HabitParams) {
             <div>{habit.startDay}</div>
             <div className="flex flex-col h-20">
                 {habit.dates.map((date: [string, boolean], i) => {
-                    return <div key={i}>{`${date[0]}, ${date[1]}`}</div>
+                    return <HabitBox date={date} key={i} />
                 })}
             </div>
         </div>
