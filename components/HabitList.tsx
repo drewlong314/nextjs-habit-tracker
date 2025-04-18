@@ -23,11 +23,9 @@ export default function HabitList() {
 
     return (
         <div>
-            <div>
-                {habits?.length && habits.map((habit, i) => {
-                    return <Habit habit={habit} key={i} />
-                })}
-            </div>
+            {habits?.length && habits.map((habit, i) => {
+                return <Habit habit={habit} setHabits={setHabits} key={i} />
+            })}
         </div>
     );
 }

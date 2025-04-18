@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from "react"
 import HabitBox from "./HabitBox"
 
 interface Habit {
@@ -7,10 +8,11 @@ interface Habit {
 }
 
 interface HabitParams {
-    habit: Habit
+    habit: Habit,
+    setHabits: Dispatch<SetStateAction<[Habit] | null>>
 }
 
-export default function Habit({ habit }: HabitParams) {
+export default function Habit({ habit, setHabits }: HabitParams) {
 
     const findNearestSunday = () => {
         const currentDate = new Date()
@@ -36,6 +38,18 @@ export default function Habit({ habit }: HabitParams) {
         return weekDays
     }
 
+    const addProgress = async () => {
+        const newHabitProgress = habit
+        const today = new Date().toISOString()
+        newHabitProgress.dates[today] = true
+        const res = await fetch("/api", {
+            method: "POST",
+            body: JSON.stringify(newHabitProgress),
+        })
+        const json = await res.json()
+        setHabits(json)
+    }
+
     return (
         <div>
             <div>{habit.title}</div>
@@ -46,12 +60,12 @@ export default function Habit({ habit }: HabitParams) {
                             return true
                         }
                     })
-
                     if (habit.dates[isFiltered[0]]) return <HabitBox isChecked={true} key={i} />
                     else if (new Date() < new Date(date)) return <HabitBox isChecked={false} isUnreachable={true} key={i} />
                     else return <HabitBox isChecked={false} key={i} />
                 })}
             </div>
+            <button className={"border-2 bg-green-400 text-black w-8 h-8 hover:bg-green-300"} onClick={addProgress}>+</button>
         </div>
     );
 }
