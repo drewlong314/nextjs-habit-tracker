@@ -12,7 +12,7 @@ export const GET = async () => {
     return new NextResponse(data)
 }
 
-export const POST = async (request: NextRequest) => {
+export const PATCH = async (request: NextRequest) => {
     const body = await request.json()
     const data = readFileSync('public/data.json', "utf-8")
     const oldData = JSON.parse(data)

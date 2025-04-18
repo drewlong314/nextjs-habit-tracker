@@ -41,13 +41,39 @@ export default function Habit({ habit, setHabits }: HabitParams) {
     const addProgress = async () => {
         const newHabitProgress = habit
         const today = new Date().toISOString()
-        newHabitProgress.dates[today] = true
-        const res = await fetch("/api", {
-            method: "POST",
-            body: JSON.stringify(newHabitProgress),
+        const keyIsAlreadyAdded = Object.keys(habit.dates).find((day) => {
+            return day.split('T')[0] === today.split('T')[0]
         })
-        const json = await res.json()
-        setHabits(json)
+
+        if (!keyIsAlreadyAdded) {
+            newHabitProgress.dates[today] = true
+            const res = await fetch("/api", {
+                method: "PATCH",
+                body: JSON.stringify(newHabitProgress),
+            })
+            const json = await res.json()
+            setHabits(json)
+        }
+    }
+
+    const removeProgress = async () => {
+        const newHabitProgress = habit
+        const today = new Date().toISOString()
+        const keyToRemove = Object.keys(habit.dates).find((day) => {
+            return day.split('T')[0] === today.split('T')[0]
+        })
+
+        if (keyToRemove) {
+            delete newHabitProgress.dates[keyToRemove]
+
+            newHabitProgress.dates = habit.dates
+            const res = await fetch("/api", {
+                method: "PATCH",
+                body: JSON.stringify(newHabitProgress),
+            })
+            const json = await res.json()
+            setHabits(json)
+        }
     }
 
     return (
@@ -66,6 +92,8 @@ export default function Habit({ habit, setHabits }: HabitParams) {
                 })}
             </div>
             <button className={"border-2 bg-green-400 text-black w-8 h-8 hover:bg-green-300"} onClick={addProgress}>+</button>
+            <button className={"border-2 bg-red-400 text-black w-8 h-8 hover:bg-red-300"} onClick={removeProgress}>-</button>
+
         </div>
     );
 }
