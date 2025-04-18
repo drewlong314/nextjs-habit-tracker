@@ -1,14 +1,9 @@
 interface HabitBoxParams {
-    date: [string, boolean]
+    isChecked: boolean
 }
 
-export default function HabitBox({ date }: HabitBoxParams) {
-
-
+export default function HabitBox({ isChecked }: HabitBoxParams) {
     return (
-        <div className="flex">
-            <div className={`${date[1] ? "bg-green-500" : " bg-gray-700"} border-1 border-black h-4 w-4`} />
-            <div className={`${date[1] ? "bg-green-500" : "bg-gray-700"} border-1 border-black h-4 w-4`} />
-        </div>
+        <div className={`${isChecked ? "bg-green-500" : " bg-gray-700"} border-1 border-black h-4 w-4`} />
     );
 }

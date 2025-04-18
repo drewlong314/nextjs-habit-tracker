@@ -12,13 +12,44 @@ interface HabitParams {
 
 export default function Habit({ habit }: HabitParams) {
 
+    const findNearestSunday = () => {
+        const currentDate = new Date()
+        for (let i = 0; i < 7; i++) {
+            const currentDay = `${currentDate.toString()[0]}${currentDate.toString()[1]}${currentDate.toString()[2]}`
+            if (currentDay === "Sun") return currentDate
+            else currentDate.setDate(currentDate.getDate() - 1)
+        }
+    }
+
+    const getWeek = () => {
+        const weekDays = []
+        const nearestSunday = findNearestSunday()
+
+        if (nearestSunday) {
+            weekDays.push(nearestSunday.toISOString().split('T')[0])
+            for (let i = 1; i < 7; i++) {
+                const nextDay = new Date(nearestSunday)
+                nextDay.setDate(nearestSunday.getDate() + i)
+                weekDays.push(nextDay.toISOString().split('T')[0])
+            }
+        }
+        return weekDays
+    }
+
     return (
         <div>
             <div>{habit.title}</div>
             <div>{habit.startDay}</div>
-            <div className="flex flex-col h-20">
-                {habit.dates.map((date: [string, boolean], i) => {
-                    return <HabitBox date={date} key={i} />
+            <div className="flex">
+                {getWeek().map((date: string, i) => {
+                    const isFiltered = Object.keys(habit.dates).filter((day) => {
+                        if (day.split('T')[0] === date) {
+                            return true
+                        }
+                    })
+
+                    if (habit.dates[isFiltered[0]]) return <HabitBox isChecked={true} key={i} />
+                    else return <HabitBox isChecked={false} key={i} />
                 })}
             </div>
         </div>
