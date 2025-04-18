@@ -6,7 +6,7 @@ import Habit from "./Habit";
 export interface Habit {
     title: string,
     startDay: string,
-    dates: [[string, boolean]]
+    dates: Record<string, boolean>
 }
 
 export default function HabitList() {

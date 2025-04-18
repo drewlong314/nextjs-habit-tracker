@@ -3,7 +3,7 @@ import HabitBox from "./HabitBox"
 interface Habit {
     title: string,
     startDay: string,
-    dates: [[string, boolean]]
+    dates: Record<string, boolean>
 }
 
 interface HabitParams {
@@ -39,7 +39,6 @@ export default function Habit({ habit }: HabitParams) {
     return (
         <div>
             <div>{habit.title}</div>
-            <div>{habit.startDay}</div>
             <div className="flex">
                 {getWeek().map((date: string, i) => {
                     const isFiltered = Object.keys(habit.dates).filter((day) => {
@@ -49,6 +48,7 @@ export default function Habit({ habit }: HabitParams) {
                     })
 
                     if (habit.dates[isFiltered[0]]) return <HabitBox isChecked={true} key={i} />
+                    else if (new Date() < new Date(date)) return <HabitBox isChecked={false} isUnreachable={true} key={i} />
                     else return <HabitBox isChecked={false} key={i} />
                 })}
             </div>
